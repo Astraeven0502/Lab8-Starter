@@ -54,6 +54,23 @@ function initializeServiceWorker() {
   // B5. TODO - In the event that the service worker registration fails, console
   //            log that it has failed.
   // STEPS B6 ONWARDS WILL BE IN /sw.js
+  
+  //B1
+  if ("serviceWorker" in navigator){
+    //B2
+    window.addEventListener("load", async () =>{
+      //B3
+      navigator.serviceWorker.register("./sw.js")
+      //B4
+      .then((registeration) =>{
+        console.log("Service worker has been successfully registered")
+      })
+      //B5
+      .catch((error) =>{
+        console.log("The service worker registration fails:", error)
+      });
+    });
+  }
 }
 
 /**
@@ -68,10 +85,15 @@ async function getRecipes() {
   // EXPOSE - START (All expose numbers start with A)
   // A1. TODO - Check local storage to see if there are any recipes.
   //            If there are recipes, return them.
+  const localRecipes = localStorage.getItem('recipes');
+  if (localRecipes != null) {
+    return JSON.parse(localRecipes);
+  }
   /**************************/
   // The rest of this method will be concerned with requesting the recipes
   // from the network
   // A2. TODO - Create an empty array to hold the recipes that you will fetch
+  let recipes = [];
   // A3. TODO - Return a new Promise. If you are unfamiliar with promises, MDN
   //            has a great article on them. A promise takes one parameter - A
   //            function (we call these callback functions). That function will
@@ -100,6 +122,34 @@ async function getRecipes() {
   //            resolve() method.
   // A10. TODO - Log any errors from catch using console.error
   // A11. TODO - Pass any errors to the Promise's reject() function
+
+  //A3
+  return new Promise(async (resolve, reject) =>{
+    //A4
+    for (const url of RECIPE_URLS){
+      //A5
+      try{
+        //A6
+        const fetchedURL = await fetch(url);
+        //A7
+        const recipe = await fetchedURL.json();
+        //A8
+        recipes.push(recipe);
+        //A9
+        if (recipes.length === RECIPE_URLS.length){
+          //save the recipes to storage
+          saveRecipesToStorage(recipes);
+          //resolve() method
+          resolve(recipes);
+        }
+      } catch(err) {
+        //A10
+        console.error(err);
+        //A11
+        reject(err);
+      }
+    }
+  });
 }
 
 /**
