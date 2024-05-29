@@ -2,13 +2,13 @@
     "name": "Lab8-Starter",
     "short_name": "Po-Yu Lai",
     "description": "Recipe website",
-    "start_url": "./",
+    "start_url": "/index.html",
     "display": "minimal-ui",
     "background_color": "black",
     "theme_color": "blue",
     "icons": [
       {
-        "src": "/assets/images/icons/icon-192x192.png",
+        "src": "./assets/images/icons/icon-192x192.png",
         "sizes": "192x192",
         "type": "image/png"
       },
